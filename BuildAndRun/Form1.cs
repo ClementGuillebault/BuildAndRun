@@ -1,39 +1,110 @@
-﻿using BuildAndRun.Forms.Errors;
+﻿using BuildAndRun.CustomException;
+using BuildAndRun.Forms.Errors;
 using BuildAndRun.Library;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace BuildAndRun {
-    public partial class Form1 : Form {
-        public string PATH = @"C:\Users\Ours\Desktop\BuildAndRun\BuildAndRun\Exemple";
-        public IList<Build> Builds { get; set; }
-        public ObservableCollection<Automate> Automates { get; set; } = new ObservableCollection<Automate>();
-        public IList<System.CodeDom.Compiler.CompilerError> BuildErrors { get; set; }
 
+    public partial class Form1 : Form {
+        // public string PATH = @"C:\Users\Ours\Desktop\BuildAndRun\BuildAndRun\Exemple";
+        public string PATH = @"C:\Users\Zaltais\source\repos\BuildAndRun\BuildAndRun\Exemple";
         public Form1() {
             InitializeComponent();
+
             Automates.CollectionChanged += Automates_CollectionChanged;
             dataGridView1.CellClick += DataGridView1_CellClick;
+
             Builds = new List<Build>();
             BuildErrors = new List<System.CodeDom.Compiler.CompilerError>();
+            RunErrors = new List<Exception>();
         }
 
-        private void DataGridView1_CellClick(object sender, DataGridViewCellEventArgs e) {
-            if (e.RowIndex < 0) { return; }
+        public ObservableCollection<Automate> Automates { get; set; } = new ObservableCollection<Automate>();
+        public IList<System.CodeDom.Compiler.CompilerError> BuildErrors { get; set; }
+        public IList<Build> Builds { get; set; }
+        public IList<Exception> RunErrors { get; set; }
 
-            if (e.ColumnIndex == dataGridView1.Columns["colSeeBuildErrors"].Index) {
-                if (Convert.ToInt32(dataGridView1.Rows[e.RowIndex].Cells["colStateOfBuild"].Value) == (int)State.Failed) {
-                    var Form2 = new FormErrorBuild(BuildErrors);
-                    Form2.Show();
-                    return;
-                }
+
+        public void Automate_StateOfBuild_Changed(object sender, StateChangedEventArgs e) {
+            try {
+                dataGridView1?.BeginInvoke((MethodInvoker)delegate () {
+                    foreach (DataGridViewRow row in dataGridView1.Rows) {
+                        if (row.Cells["FileName"].Value.ToString() == e.Name) {
+                            row.Cells["ExecutedAt"].Value = e.ExecutedAt;
+                            row.Cells["StateOfBuild"].Value = e.State;
+                            if (e.State == State.Success) {
+                                var temp = new DataGridViewTextBoxCell() {
+                                    Value = "No Errors",
+                                    Style = new DataGridViewCellStyle() {
+                                        BackColor = Color.PaleGreen
+                                    }
+                                };
+                                row.Cells["BuildError"] = temp;
+                                row.Cells["BuildError"].ReadOnly = true;
+                            }
+                            break;
+                        }
+                    }
+                });
             }
-            if (e.ColumnIndex == dataGridView1.Columns["colSeeRunErrors"].Index) {
+            catch (Exception ex) {
+                throw ex;
+            }
+        }
+        public void Automate_StateOfRun_Changed(object sender, StateChangedEventArgs e) {
+            try {
+                dataGridView1?.BeginInvoke((MethodInvoker)delegate () {
+                    foreach (DataGridViewRow row in dataGridView1.Rows) {
+                        if (row.Cells["FileName"].Value.ToString() == e.Name) {
+                            row.Cells["ExecutedAt"].Value = e.ExecutedAt;
+                            row.Cells["StateOfRun"].Value = e.State;
+                            if (e.State == State.Success) {
+                                var temp = new DataGridViewTextBoxCell() {
+                                    Value = "No Errors",
+                                    Style = new DataGridViewCellStyle() {
+                                        BackColor = Color.PaleGreen
+                                    }
+                                };
+                                row.Cells["RunError"] = temp;
+                                row.Cells["RunError"].ReadOnly = true;
+                            }
+                            break;
+                        }
+                    }
+                });
+            }
+            catch (Exception ex) {
+                throw ex;
+            }
+        }
 
+        public void BtnConfiguration_Click(object sender, EventArgs e) {
+        }
+
+        public void BtnRun_Click(object sender, EventArgs e) {
+            var compileRepository = new CompileRepository(new DirectoryInfo(PATH));
+            var automates = compileRepository.GetAutomates();
+            try {
+                Parallel.ForEach(automates, async (automate) => {
+                    Build build = new Build(automate);
+                    Automates.Add(automate);
+
+                    build.BuildErrors_Updated += Compilation_BuildErrors_Updated;
+                    automate.StateOfBuild_Changed += Automate_StateOfBuild_Changed;
+                    automate.StateOfRun_Changed += Automate_StateOfRun_Changed;
+
+                    build.Compile();
+                    await build.Execute();
+                });
+            }
+            catch (Exception ex) {
+                throw ex;
             }
         }
 
@@ -43,8 +114,10 @@ namespace BuildAndRun {
                     if (automate is null) {
                         return;
                     }
-                    dataGridView1?.BeginInvoke((MethodInvoker) delegate () {
+
+                    dataGridView1?.BeginInvoke((MethodInvoker)delegate () {
                         dataGridView1.Rows.Add(
+                            automate.Id,
                             automate.Name,
                             automate.ExecutedAt,
                             automate.StateOfBuild.ToString(),
@@ -57,25 +130,6 @@ namespace BuildAndRun {
             }
         }
 
-        public void BtnRun_Click(object sender, EventArgs e) {
-            var compileRepository = new CompileRepository(new DirectoryInfo(PATH));
-            var automates = compileRepository.GetAutomates();
-            try {
-                Parallel.ForEach(automates, async (automate) => {
-                    Build compilation = new Build(automate);
-                    compilation.BuildErrors_Updated += Compilation_BuildErrors_Updated;
-                    Automates.Add(automate);
-                    automate.StateOfBuild_Changed += Automate_StateOfBuild_Changed;
-                    automate.StateOfRun_Changed += Automate_StateOfRun_Changed;
-                    compilation.Compile();
-                    await compilation.Execute();
-                });
-            }
-            catch (Exception ex) {
-                throw ex;
-            }
-        }
-
         private void Compilation_BuildErrors_Updated(object sender, System.CodeDom.Compiler.CompilerErrorCollection e) {
             if (e.Count > 0) {
                 foreach (System.CodeDom.Compiler.CompilerError error in e) {
@@ -84,44 +138,23 @@ namespace BuildAndRun {
             }
         }
 
-        public void Automate_StateOfRun_Changed(object sender, StateChangedEventArgs e) {
-            try {
-                dataGridView1?.BeginInvoke((MethodInvoker)delegate () {
-                    foreach (DataGridViewRow row in dataGridView1.Rows) {
-                        string executedAt = Convert.ToString(row.Cells["colExecutedAt"].Value);
-                        if (row.Cells["colNameOfFile"].Value.ToString() == e.Name && executedAt.Length == 0) {
-                            row.Cells["colExecutedAt"].Value = e.ExecutedAt;
-                            row.Cells["colStateOfRun"].Value = e.State;
-                            break;
-                        }
-                    }
-                });
-            }
-            catch (Exception ex) {
-                throw ex;
-            }
-        }
+        private void DataGridView1_CellClick(object sender, DataGridViewCellEventArgs e) {
+            if (e.RowIndex < 0) { return; }
 
-        public void Automate_StateOfBuild_Changed(object sender, StateChangedEventArgs e) {
-            try {
-                dataGridView1?.BeginInvoke((MethodInvoker)delegate () {
-                    foreach (DataGridViewRow row in dataGridView1.Rows) {
-                        string executedAt = Convert.ToString(row.Cells["colExecutedAt"].Value);
-                        if (row.Cells["colNameOfFile"].Value.ToString() == e.Name && executedAt.Length == 0) {
-                            row.Cells["colExecutedAt"].Value = e.ExecutedAt;
-                            row.Cells["colStateOfBuild"].Value = e.State;
-                            break;
-                        }
-                    }
-                });
+            if (e.ColumnIndex == dataGridView1.Columns["BuildError"].Index) {
+                if (dataGridView1.Rows[e.RowIndex].Cells["StateOfBuild"].Value.ToString() == State.Failed.ToString()) {
+                    var Form2 = new FormErrorBuild(BuildErrors);
+                    Form2.Show();
+                    return;
+                }
             }
-            catch (Exception ex) {
-                throw ex;
+            if (e.ColumnIndex == dataGridView1.Columns["RunError"].Index) {
+                if (dataGridView1.Rows[e.RowIndex].Cells["StateOfRun"].Value.ToString() == State.Failed.ToString()) {
+                    var Form2 = new FormErrorRun(dataGridView1.Rows[e.RowIndex].Cells["FileName"].Value.ToString(), RunErrors);
+                    Form2.Show();
+                    return;
+                }
             }
-        }
-
-        public void BtnConfiguration_Click(object sender, EventArgs e) {
-
         }
     }
 }

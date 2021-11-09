@@ -48,17 +48,30 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CustomException\StateChangedEventArgs.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Configuration\FormConfiguration.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Configuration\FormConfiguration.Designer.cs">
+      <DependentUpon>FormConfiguration.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Errors\FormErrorBuild.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\Errors\FormErrorBuild.Designer.cs">
       <DependentUpon>FormErrorBuild.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Errors\FormErrorRun.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Errors\FormErrorRun.Designer.cs">
+      <DependentUpon>FormErrorRun.cs</DependentUpon>
     </Compile>
     <Compile Include="Library\Build.cs" />
     <Compile Include="Library\Automate.cs" />
@@ -73,6 +86,9 @@
     <EmbeddedResource Include="Forms\Errors\FormErrorBuild.resx">
       <DependentUpon>FormErrorBuild.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Errors\FormErrorRun.resx">
+      <DependentUpon>FormErrorRun.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -81,6 +97,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -97,6 +114,13 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Exemple\" />
+    <Folder Include="Template\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icon_led_green.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icon_led_red.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

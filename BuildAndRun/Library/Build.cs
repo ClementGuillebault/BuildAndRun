@@ -1,6 +1,5 @@
 ﻿using System;
 using System.CodeDom.Compiler;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -12,18 +11,15 @@ using System.Threading.Tasks;
 namespace BuildAndRun.Library {
 
     public class Build {
-        public const string PATH = @"C:\inetpub\wwwroot\e-archivsystem-TZ\AutomateManager\Automates\";
-
-        public Build() {
-        }
 
         public Build(Automate automate) => TemplateAutomate = automate;
 
         public event EventHandler<CompilerErrorCollection> BuildErrors_Updated;
 
-        public CompilerResults CompilerResults { get;set; }
+        public CompilerResults CompilerResults { get; set; }
 
         private CompilerErrorCollection _buildErrors { get; set; }
+
         public CompilerErrorCollection BuildErrors {
             get => _buildErrors;
             set {
@@ -31,6 +27,7 @@ namespace BuildAndRun.Library {
                 OnBuildErrorsUpdated();
             }
         }
+
         public CompilerParameters CompilerParameters { get; set; } = null;
 
         public bool ErrorInExecution { get; set; } = false;
@@ -50,7 +47,6 @@ namespace BuildAndRun.Library {
         public virtual void OnBuildErrorsUpdated() {
             BuildErrors_Updated.Invoke(this, BuildErrors);
         }
-
 
         public void Compile(string filename = "") {
             string sourceName = string.IsNullOrEmpty(filename) ? TemplateAutomate.FileName : filename;
@@ -92,7 +88,6 @@ namespace BuildAndRun.Library {
             else {
                 TemplateAutomate.StateOfBuild = State.Success;
             }
-            
         }
 
         public async Task Execute() {
@@ -175,5 +170,4 @@ namespace BuildAndRun.Library {
             };
         }
     }
-
 }

@@ -42,16 +42,17 @@ namespace BuildAndRun {
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.colNameOfFile = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colExecutedAt = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colStateOfBuild = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colSeeBuildErrors = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.colStateOfRun = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colSeeRunErrors = new System.Windows.Forms.DataGridViewButtonColumn();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
             this.toolStripStatusStateOfApp = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
+            this.IdOfAutomate = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.FileName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ExecutedAt = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.StateOfBuild = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.BuildError = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.StateOfRun = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.RunError = new System.Windows.Forms.DataGridViewButtonColumn();
             this.grpBoxTitle.SuspendLayout();
             this.panel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -181,11 +182,12 @@ namespace BuildAndRun {
             this.btnRun.TabIndex = 0;
             this.btnRun.Text = "RUN";
             this.btnRun.UseVisualStyleBackColor = true;
+            this.btnRun.Click += new System.EventHandler(this.BtnRun_Click);
             // 
             // lblNumberOfFileRun
             // 
             this.lblNumberOfFileRun.AutoSize = true;
-            this.lblNumberOfFileRun.Location = new System.Drawing.Point(263, 104);
+            this.lblNumberOfFileRun.Location = new System.Drawing.Point(263, 120);
             this.lblNumberOfFileRun.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblNumberOfFileRun.Name = "lblNumberOfFileRun";
             this.lblNumberOfFileRun.Size = new System.Drawing.Size(24, 18);
@@ -195,7 +197,7 @@ namespace BuildAndRun {
             // lblNumberOfFileCompiled
             // 
             this.lblNumberOfFileCompiled.AutoSize = true;
-            this.lblNumberOfFileCompiled.Location = new System.Drawing.Point(263, 71);
+            this.lblNumberOfFileCompiled.Location = new System.Drawing.Point(263, 87);
             this.lblNumberOfFileCompiled.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblNumberOfFileCompiled.Name = "lblNumberOfFileCompiled";
             this.lblNumberOfFileCompiled.Size = new System.Drawing.Size(24, 18);
@@ -205,7 +207,7 @@ namespace BuildAndRun {
             // lblNumberOfFileInDirectory
             // 
             this.lblNumberOfFileInDirectory.AutoSize = true;
-            this.lblNumberOfFileInDirectory.Location = new System.Drawing.Point(263, 37);
+            this.lblNumberOfFileInDirectory.Location = new System.Drawing.Point(263, 53);
             this.lblNumberOfFileInDirectory.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblNumberOfFileInDirectory.Name = "lblNumberOfFileInDirectory";
             this.lblNumberOfFileInDirectory.RightToLeft = System.Windows.Forms.RightToLeft.No;
@@ -217,7 +219,7 @@ namespace BuildAndRun {
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Comic Sans MS", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(8, 104);
+            this.label3.Location = new System.Drawing.Point(8, 120);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(139, 18);
@@ -228,7 +230,7 @@ namespace BuildAndRun {
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Comic Sans MS", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(8, 37);
+            this.label1.Location = new System.Drawing.Point(8, 53);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(185, 18);
@@ -239,7 +241,7 @@ namespace BuildAndRun {
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Comic Sans MS", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(8, 71);
+            this.label2.Location = new System.Drawing.Point(8, 87);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(166, 18);
@@ -252,63 +254,20 @@ namespace BuildAndRun {
             this.dataGridView1.AllowUserToDeleteRows = false;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.colNameOfFile,
-            this.colExecutedAt,
-            this.colStateOfBuild,
-            this.colSeeBuildErrors,
-            this.colStateOfRun,
-            this.colSeeRunErrors});
+            this.IdOfAutomate,
+            this.FileName,
+            this.ExecutedAt,
+            this.StateOfBuild,
+            this.BuildError,
+            this.StateOfRun,
+            this.RunError});
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.dataGridView1.Location = new System.Drawing.Point(0, 233);
             this.dataGridView1.Margin = new System.Windows.Forms.Padding(4);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.ReadOnly = true;
-            this.dataGridView1.Size = new System.Drawing.Size(1067, 368);
+            this.dataGridView1.Size = new System.Drawing.Size(1067, 398);
             this.dataGridView1.TabIndex = 6;
-            // 
-            // colNameOfFile
-            // 
-            this.colNameOfFile.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.colNameOfFile.HeaderText = "Name";
-            this.colNameOfFile.Name = "colNameOfFile";
-            this.colNameOfFile.ReadOnly = true;
-            // 
-            // colExecutedAt
-            // 
-            this.colExecutedAt.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.colExecutedAt.HeaderText = "Executed at";
-            this.colExecutedAt.Name = "colExecutedAt";
-            this.colExecutedAt.ReadOnly = true;
-            // 
-            // colStateOfBuild
-            // 
-            this.colStateOfBuild.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.colStateOfBuild.HeaderText = "State of build";
-            this.colStateOfBuild.Name = "colStateOfBuild";
-            this.colStateOfBuild.ReadOnly = true;
-            // 
-            // colSeeBuildErrors
-            // 
-            this.colSeeBuildErrors.HeaderText = "Build Errors";
-            this.colSeeBuildErrors.Name = "colSeeBuildErrors";
-            this.colSeeBuildErrors.ReadOnly = true;
-            this.colSeeBuildErrors.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.colSeeBuildErrors.Width = 70;
-            // 
-            // colStateOfRun
-            // 
-            this.colStateOfRun.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.colStateOfRun.HeaderText = "State of run";
-            this.colStateOfRun.Name = "colStateOfRun";
-            this.colStateOfRun.ReadOnly = true;
-            // 
-            // colSeeRunErrors
-            // 
-            this.colSeeRunErrors.HeaderText = "Run Errors";
-            this.colSeeRunErrors.Name = "colSeeRunErrors";
-            this.colSeeRunErrors.ReadOnly = true;
-            this.colSeeRunErrors.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.colSeeRunErrors.Width = 70;
             // 
             // statusStrip1
             // 
@@ -316,17 +275,12 @@ namespace BuildAndRun {
             this.toolStripStatusStateOfApp,
             this.toolStripStatusLabel2,
             this.toolStripProgressBar1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 601);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 631);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Padding = new System.Windows.Forms.Padding(1, 0, 19, 0);
             this.statusStrip1.Size = new System.Drawing.Size(1067, 22);
             this.statusStrip1.TabIndex = 8;
             this.statusStrip1.Text = "statusStrip1";
-            // 
-            // toolStripProgressBar1
-            // 
-            this.toolStripProgressBar1.Name = "toolStripProgressBar1";
-            this.toolStripProgressBar1.Size = new System.Drawing.Size(350, 16);
             // 
             // toolStripStatusStateOfApp
             // 
@@ -339,14 +293,74 @@ namespace BuildAndRun {
             // toolStripStatusLabel2
             // 
             this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
-            this.toolStripStatusLabel2.Size = new System.Drawing.Size(587, 17);
+            this.toolStripStatusLabel2.Size = new System.Drawing.Size(618, 17);
             this.toolStripStatusLabel2.Spring = true;
+            // 
+            // toolStripProgressBar1
+            // 
+            this.toolStripProgressBar1.Name = "toolStripProgressBar1";
+            this.toolStripProgressBar1.Size = new System.Drawing.Size(350, 16);
+            // 
+            // IdOfAutomate
+            // 
+            this.IdOfAutomate.HeaderText = "Id";
+            this.IdOfAutomate.Name = "IdOfAutomate";
+            this.IdOfAutomate.ReadOnly = true;
+            this.IdOfAutomate.Visible = false;
+            // 
+            // FileName
+            // 
+            this.FileName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.FileName.HeaderText = "Name";
+            this.FileName.Name = "FileName";
+            this.FileName.ReadOnly = true;
+            // 
+            // ExecutedAt
+            // 
+            this.ExecutedAt.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.ExecutedAt.HeaderText = "Executed at";
+            this.ExecutedAt.Name = "ExecutedAt";
+            this.ExecutedAt.ReadOnly = true;
+            // 
+            // StateOfBuild
+            // 
+            this.StateOfBuild.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.StateOfBuild.HeaderText = "State of build";
+            this.StateOfBuild.Name = "StateOfBuild";
+            this.StateOfBuild.ReadOnly = true;
+            // 
+            // BuildError
+            // 
+            this.BuildError.HeaderText = "Build Errors";
+            this.BuildError.Name = "BuildError";
+            this.BuildError.ReadOnly = true;
+            this.BuildError.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.BuildError.Text = "Open";
+            this.BuildError.UseColumnTextForButtonValue = true;
+            this.BuildError.Width = 70;
+            // 
+            // StateOfRun
+            // 
+            this.StateOfRun.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.StateOfRun.HeaderText = "State of run";
+            this.StateOfRun.Name = "StateOfRun";
+            this.StateOfRun.ReadOnly = true;
+            // 
+            // RunError
+            // 
+            this.RunError.HeaderText = "Run Errors";
+            this.RunError.Name = "RunError";
+            this.RunError.ReadOnly = true;
+            this.RunError.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.RunError.Text = "Open";
+            this.RunError.UseColumnTextForButtonValue = true;
+            this.RunError.Width = 70;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1067, 623);
+            this.ClientSize = new System.Drawing.Size(1067, 653);
             this.Controls.Add(this.grpBoxTitle);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.statusStrip1);
@@ -386,16 +400,17 @@ namespace BuildAndRun {
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.DataGridView dataGridView1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colNameOfFile;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colExecutedAt;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colStateOfBuild;
-        private System.Windows.Forms.DataGridViewButtonColumn colSeeBuildErrors;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colStateOfRun;
-        private System.Windows.Forms.DataGridViewButtonColumn colSeeRunErrors;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusStateOfApp;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
         private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn IdOfAutomate;
+        private System.Windows.Forms.DataGridViewTextBoxColumn FileName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ExecutedAt;
+        private System.Windows.Forms.DataGridViewTextBoxColumn StateOfBuild;
+        private System.Windows.Forms.DataGridViewButtonColumn BuildError;
+        private System.Windows.Forms.DataGridViewTextBoxColumn StateOfRun;
+        private System.Windows.Forms.DataGridViewButtonColumn RunError;
     }
 }
 

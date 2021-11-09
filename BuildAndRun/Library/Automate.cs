@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BuildAndRun.CustomException;
+using System;
 
 namespace BuildAndRun.Library {
 
@@ -9,6 +10,8 @@ namespace BuildAndRun.Library {
 
         public event EventHandler<StateChangedEventArgs> StateOfBuild_Changed;
         public event EventHandler<StateChangedEventArgs> StateOfRun_Changed;
+
+        public Guid Id => Guid.NewGuid();
 
         public DateTime? ExecutedAt { get; set; } = null;
         public string FileName { get; set; } = "";
@@ -34,20 +37,7 @@ namespace BuildAndRun.Library {
                 OnRunStateChanged();
             }
         }
-        public virtual void OnRunStateChanged() {
+        public virtual void OnRunStateChanged() =>
             StateOfRun_Changed.Invoke(this, new StateChangedEventArgs(Name, ExecutedAt, StateOfRun));
-        }
-    }
-
-    public class StateChangedEventArgs : EventArgs {
-        public string Name { get; private set; }
-        public DateTime? ExecutedAt { get; private set; }
-        public State State { get; private set; }
-
-        public StateChangedEventArgs(string name, DateTime? executedAt, State state) {
-            Name = name;
-            ExecutedAt = executedAt;
-            State = state;
-        }
     }
 }
