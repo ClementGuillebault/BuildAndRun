@@ -23,12 +23,14 @@ namespace BuildAndRun {
             Builds = new List<Build>();
             BuildErrors = new List<System.CodeDom.Compiler.CompilerError>();
             RunErrors = new List<Exception>();
+            FileNameOfAutomatonAlreadyRun = new List<string>();
         }
 
         public ObservableCollection<Automate> Automates { get; set; } = new ObservableCollection<Automate>();
         public IList<System.CodeDom.Compiler.CompilerError> BuildErrors { get; set; }
         public IList<Build> Builds { get; set; }
         public IList<Exception> RunErrors { get; set; }
+        public IList<string> FileNameOfAutomatonAlreadyRun { get; set; }
 
 
         public void Automate_StateOfBuild_Changed(object sender, StateChangedEventArgs e) {
@@ -93,7 +95,16 @@ namespace BuildAndRun {
             try {
                 Parallel.ForEach(automates, async (automate) => {
                     Build build = new Build(automate);
+
+                    /* Pour les nom de fichiers identique */
+                    //if (FileNameOfAutomatonAlreadyRun.Contains(automate.Name)) {
+                    //    var name = Path.GetFileNameWithoutExtension(automate.Name);
+                    //    automate.Name = name + new Random().Next() + Path.GetExtension(automate.Name);
+                    //}
                     Automates.Add(automate);
+
+                    /* Pour les nom de fichier identique */
+                    FileNameOfAutomatonAlreadyRun.Add(automate.Name);
 
                     build.BuildErrors_Updated += Compilation_BuildErrors_Updated;
                     automate.StateOfBuild_Changed += Automate_StateOfBuild_Changed;
@@ -114,18 +125,22 @@ namespace BuildAndRun {
                     if (automate is null) {
                         return;
                     }
-
-                    dataGridView1?.BeginInvoke((MethodInvoker)delegate () {
-                        dataGridView1.Rows.Add(
-                            automate.Id,
-                            automate.Name,
-                            automate.ExecutedAt,
-                            automate.StateOfBuild.ToString(),
-                            null, // button see errors
-                            automate.StateOfRun.ToString(),
-                            null // button see errors
-                        );
-                    });
+                    if (FileNameOfAutomatonAlreadyRun.Contains(automate.Name)) {
+                        //dataGridView1.Rows.RemoveAt()
+                    }
+                    else {
+                        dataGridView1?.BeginInvoke((MethodInvoker)delegate () {
+                            dataGridView1.Rows.Add(
+                                automate.Id,
+                                automate.Name,
+                                automate.ExecutedAt,
+                                automate.StateOfBuild.ToString(),
+                                null, // button see errors
+                                automate.StateOfRun.ToString(),
+                                null // button see errors
+                            );
+                        });
+                    }
                 }
             }
         }
