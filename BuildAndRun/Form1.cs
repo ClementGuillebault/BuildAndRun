@@ -12,8 +12,7 @@ using System.Windows.Forms;
 namespace BuildAndRun {
 
     public partial class Form1 : Form {
-        // public string PATH = @"C:\Users\Ours\Desktop\BuildAndRun\BuildAndRun\Exemple";
-        public string PATH = @"C:\Users\Zaltais\source\repos\BuildAndRun\BuildAndRun\Exemple";
+        public string PATH = @"your/path/";
         public Form1() {
             InitializeComponent();
 
